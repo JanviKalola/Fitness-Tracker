@@ -1,6 +1,5 @@
 # Fitness Tracker App
 
-https://your-fitness-tracker.streamlit.app/
 
 This project focuses on tracking and predicting an individual's fitness level based on daily activity data. Using machine learning techniques, specifically Logistic Regression and Random Forest classifiers, the project provides fitness insights and recommendations that can be valuable for health-conscious individuals, trainers, and researchers.
 
