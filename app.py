@@ -11,7 +11,8 @@ from sklearn.ensemble import RandomForestRegressor
 st.set_page_config(page_title="🏋 Fitness Tracker", layout="wide")
 
 #  Model File
-MODEL_FILE = "fitness_model.pkl"
+#MODEL_FILE = "fitness_model.pkl"
+model = joblib.load('fitness_model.pkl')
 
 # ✅ Function to Load or Train Model
 @st.cache_resource
