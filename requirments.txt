@@ -1,5 +1,4 @@
 jupyter
-streamlit
 os
 pickle
 scikit-learn==1.5.2
