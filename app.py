@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import joblib as jl
+import joblib 
 import os
 import matplotlib.pyplot as plt
 import pickle
@@ -23,7 +23,7 @@ def load_model():
         y = np.random.randint(1, 10, size=100)  # Random fitness scores
         model = RandomForestRegressor(n_estimators=100, random_state=42)
         model.fit(X, y)
-        jl.dump(model, MODEL_FILE)
+        joblib.dump(model, MODEL_FILE)
         return model
 
 #  Load Model
