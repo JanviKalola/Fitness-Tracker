@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import joblib 
 import os
 import matplotlib.pyplot as plt
 import pickle
@@ -9,37 +10,35 @@ from sklearn.ensemble import RandomForestRegressor
 # Set Page Configuration
 st.set_page_config(page_title="🏋 Fitness Tracker", layout="wide")
 
-# Model File
+#  Model File
 MODEL_FILE = "fitness_model.pkl"
 
-# Function to Load or Train Model
+# ✅ Function to Load or Train Model
 @st.cache_resource
 def load_model():
     if os.path.exists(MODEL_FILE):
-        with open(MODEL_FILE, 'rb') as file:
-            return pickle.load(file)
+        return joblib.load(MODEL_FILE)
     else:
         X = np.random.rand(100, 3)  # Random synthetic data
         y = np.random.randint(1, 10, size=100)  # Random fitness scores
         model = RandomForestRegressor(n_estimators=100, random_state=42)
         model.fit(X, y)
-        with open(MODEL_FILE, 'wb') as file:
-            pickle.dump(model, file)
+        joblib.dump(model, MODEL_FILE)
         return model
 
-# Load Model
+#  Load Model
 model = load_model()
 
 # Initialize Session State for Storing Predictions
 if "prediction_history" not in st.session_state:
     st.session_state.prediction_history = pd.DataFrame(columns=["🏃 Steps", "❤ Heart Rate (BPM)", "🔥 Calories Burned", "🎯 Predicted Score"])
 
-# Home Page UI
+#  Home Page UI
 def show_home():
     st.title("Fitness Tracker")
     st.subheader("Prediction History ")
 
-    # Sidebar Input
+    #  Sidebar Input
     st.sidebar.header("🏃 Enter Your Activity Data")
 
     steps = st.sidebar.number_input("🚶 Steps", min_value=0, max_value=20000, value=5000, step=100)
@@ -52,7 +51,7 @@ def show_home():
         prediction = model.predict(input_features)
         st.sidebar.success(f"🏆 Estimated Fitness Score: {prediction[0]:.2f}")
 
-        # Store the Prediction in Session State
+        #  Store the Prediction in Session State
         new_data = pd.DataFrame({
             "🏃 Steps": [steps],
             "❤ Heart Rate (BPM)": [heart_rate],
@@ -66,7 +65,7 @@ def show_home():
     # Display Prediction Table
     st.dataframe(st.session_state.prediction_history, height=250, use_container_width=True)
 
-    # Visualization: Dark Theme Prediction Graph
+    #Visualization: Dark Theme Prediction Graph
     if not st.session_state.prediction_history.empty:
         st.subheader("📈 Fitness Score Trend")
 
@@ -92,7 +91,7 @@ def show_home():
         # Display Matplotlib graph in Streamlit
         st.pyplot(fig)
 
-# About Us Page
+#  About Us Page
 def show_about():
      st.title("About Us")
      st.write("""  
@@ -178,7 +177,7 @@ def show_about():
     - Contact: janvikalola1703@gmail.com  
     """)
 
-# Navigation System
+#  Navigation System
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
@@ -191,7 +190,7 @@ with col2:
     if st.button("About Us"):
         st.session_state.page = "About Us"
 
-# Page Navigation Logic
+#  Page Navigation Logic
 if st.session_state.page == "Home":
    show_home()
 elif st.session_state.page == "About Us":
