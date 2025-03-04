@@ -23,7 +23,7 @@ def load_model():
         y = np.random.randint(1, 10, size=100)  # Random fitness scores
         model = RandomForestRegressor(n_estimators=100, random_state=42)
         model.fit(X, y)
-        joblib.dump(model, MODEL_FILE)
+        jl.dump(model, MODEL_FILE)
         return model
 
 #  Load Model
