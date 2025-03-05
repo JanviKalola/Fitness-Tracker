@@ -1,9 +1,7 @@
-
 import numpy as np
 import pandas as pd
 import joblib
 import os
-import streamlit as st
 from sklearn.model_selection import train_test_split, GridSearchCV, RandomizedSearchCV
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
@@ -33,16 +31,16 @@ def tune_hyperparameters(method="grid"):
     df = load_data()
     X = df[['steps', 'heart_rate', 'calories_burned']]
     y = df['fitness_score']
-    
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
+
     # Define parameter grid
     param_grid = {
         "n_estimators": [50, 100, 200],
         "max_depth": [None, 10, 20],
         "min_samples_split": [2, 5, 10]
     }
-    
+
     model = RandomForestRegressor(random_state=42)
 
     if method == "grid":
@@ -54,20 +52,23 @@ def tune_hyperparameters(method="grid"):
 
     best_model = search.best_estimator_
     joblib.dump(best_model, MODEL_FILE)
-    
+
     # Evaluate Model
     y_pred = best_model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
-    
+
     print("Best Hyperparameters:", search.best_params_)
     print(f"Mean Squared Error (MSE): {mse:.2f}")
     print(f"R² Score: {r2:.2f}")
-    
+
     return best_model, search.best_params_, mse, r2
 
-# ✅ Run Hyperparameter Tuning
-if __name__ == "__main__":
+# ✅ Train Model
+def train_model():
     print("Starting Hyperparameter Tuning...")
     best_model, best_params, mse, r2 = tune_hyperparameters("grid")
     print("Model training and evaluation completed!")
+
+if _name_ == "_main_":
+    train_model()
