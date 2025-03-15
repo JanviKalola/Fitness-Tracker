@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import joblib
 import os
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor
@@ -9,43 +8,17 @@ from sklearn.ensemble import RandomForestRegressor
 # Set Page Configuration
 st.set_page_config(page_title="🏋️ Fitness Tracker", layout="wide")
 
-#  Model Filei
-MODEL_FILE = "fitness_model.pkl"
-
-# ✅ Function to Load or Train Model
+# ✅ Function to Train & Cache Model
 @st.cache_resource
-def load_model():
-    if os.path.exists(MODEL_FILE):
-        return joblib.load(MODEL_FILE)
-    else:
-        X = np.random.rand(100, 3)  # Random synthetic data
-        y = np.random.randint(1, 10, size=100)  # Random fitness scores
-        model = RandomForestRegressor(n_estimators=100, random_state=42)
-        model.fit(X, y)
-        joblib.dump(model, MODEL_FILE)
-        return model
+def train_model():
+    X = np.random.rand(100, 3)  # Random synthetic data
+    y = np.random.randint(1, 10, size=100)  # Random fitness scores
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X, y)
+    return model
 
-#  Load Model
-model = load_model()
-
-# Sample Training Data (Replace with actual dataset)
-data = pd.DataFrame({
-    "steps": np.random.randint(1000, 20000, 100),
-    "heart_rate": np.random.randint(40, 180, 100),
-    "calories_burned": np.random.randint(50, 5000, 100),
-    "fitness_score": np.random.uniform(1, 10, 100)
-})
-
-# Features & Target
-X = data[["steps", "heart_rate", "calories_burned"]]
-y = data["fitness_score"]
-
-# Train Model
-model = RandomForestRegressor(n_estimators=50, random_state=42)
-model.fit(X, y)
-
-# Save Model
-joblib.dump(model, "fitness_model.pkl")
+# Load Model
+model = train_model()
 
 # Initialize Session State for Storing Predictions
 if "prediction_history" not in st.session_state:
@@ -83,7 +56,7 @@ def show_home():
     # Display Prediction Table
     st.dataframe(st.session_state.prediction_history, height=250, use_container_width=True)
 
-    #Visualization: Dark Theme Prediction Graph
+    # Visualization: Dark Theme Prediction Graph
     if not st.session_state.prediction_history.empty:
         st.subheader("📈 Fitness Score Trend")
 
@@ -125,60 +98,24 @@ def show_about():
 
     **Datasets:**
     The project utilizes a dataset containing fitness-related metrics:
-    1. **Fitness Data (fitness_data.csv)**: Includes daily activity data such as steps taken, heart rate, calories burned, and other biometric details. (900 Data)
+    1. **Fitness Data**: Daily activity data such as steps taken, heart rate, calories burned, and other biometric details.
     2. **User Activity Logs**: Collects real-time fitness tracking data from users to enhance model accuracy.
               
-    **Fitness mesure** :
-    1. **Stpes** : **0 t0 20000** (Best : 1000 - 5000)
-    2. **Heart Rate** : **40 to 200** (Best : 70 - 79)
-    3. **Calories Burned** : **0 t0 5000** (Best : 1000 - 4000)
+    **Fitness measure** :
+    1. **Steps** : **0 to 20000** (Best: 1000 - 5000)
+    2. **Heart Rate** : **40 to 200** (Best: 70 - 79)
+    3. **Calories Burned** : **0 to 5000** (Best: 1000 - 4000)
 
-    **Machine learning Algorithms Accuracy**:
-              
-    1. **Decision Tree :
-        Accuracy : 0.74
-                     
-    2. **Naïve Bayes** :
-        Accuracy : 0.60
-
-    3. **Gradient Boosting** :
-        Accuracy : 0.77
-                        
-    3. **Random Forest** :
-        Accuracy : 0.88  (This Algorithm is used)
-
-    6. **Logistic Regression:
-        Accuracy : 0.89  (This Algorithm is used)
-
-    **Two machine learning algorithms were employed:**
-    1. **Logistic Regression**:
-    - A statistical model that uses a logistic function to predict a fitness category (e.g., low, moderate, high).
-    - Useful for binary or categorical classification.
-
-    2. **Random Forest Classifier**:
-    - An ensemble learning method that constructs multiple decision trees to predict fitness scores.
-    - Handles complex relationships in data and improves prediction accuracy.
-
-    **Hyperparameter Tuning Algorithms Accuracy** :
-
-    1. **Decision Tree + Naïve Bayes** :
-        Accuracy : 0.79
-
-    2. **Gradient Boosting + Logistic Regression** :
-        Accuarcy : 0.66
-
-    3. **Random Forest + Gradient Boosting** :
-        Accuracy : 0.69
-
-    4. **Random Forest + Logistic Regression** :
-        Accuracy : 0.899 (This Algorithm is used)
+    **Machine Learning Algorithms Used**:
+    - **Random Forest** (Accuracy: **0.88**)  
+    - **Logistic Regression** (Accuracy: **0.89**)  
 
     **Hyperparameter Tuning Algorithm**:
 
-        1. **Grid Search:**
+        1. **Grid Search:**  
             - Exhaustively tests multiple hyperparameter combinations to find the best-performing model.
 
-        2. **Random Search:**
+        2. **Random Search:**  
             - Randomly selects hyperparameters from a predefined range, offering a balance between efficiency and performance.
 
     **Ensure the following Python libraries are installed before running the app:**
@@ -186,12 +123,10 @@ def show_about():
     - `pandas`
     - `scikit-learn`
     - `matplotlib`
-    - `seaborn`
-    - `jupyter`
     - `streamlit`
 
     **Developed By:**  
-    - Janvi Kalola 
+    - Janvi Kalola  
     - Contact: janvikalola1703@gmail.com  
     """)
 
